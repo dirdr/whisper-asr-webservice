@@ -11,6 +11,7 @@ from fastapi.responses import StreamingResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from whisper import tokenizer
 from urllib.parse import quote
+from fastapi.middleware.cors import CORSMiddleware
 
 ASR_ENGINE = os.getenv("ASR_ENGINE", "openai_whisper")
 if ASR_ENGINE == "faster_whisper":
@@ -34,6 +35,19 @@ app = FastAPI(
         "name": "MIT License",
         "url": projectMetadata['License']
     }
+)
+
+allowed_origins = [
+    "http://localhost:8080",
+    "https://yourfrontenddomain.com",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 assets_path = os.getcwd() + "/swagger-ui-assets"
